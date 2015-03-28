@@ -92,16 +92,17 @@ function onListening() {
 
 // Socket.io
 var io = require('socket.io')(server);
+var numberOfPlayer = 0;
 io.on('connection', function (socket) {
   socket.emit('news', { hello: 'world' });
   socket.on('join', function(data) {
+    numberOfPlayer ++;
     console.log('Player ' + data.id + ' has joined');
     socket.broadcast.emit('joined', {
       message: 'Player ' + data.id + ' has joined'
     });
+    if (numberOfPlayer == 2) {
+        io.sockets.emit('start');
+    }
   });
 });
-
-
-
-
