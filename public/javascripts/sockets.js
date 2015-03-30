@@ -1,7 +1,7 @@
+var socket = io.connect('http://localhost:3000');
 
 (function() {
   id = Math.floor(10 * Math.random())
-  var socket = io.connect('http://172.16.2.136:3000');
   socket.emit('join', {
     id: id
   });
@@ -11,7 +11,26 @@
   });
 
   socket.on('start', function(){
-      world.init()
+      worldM.init()
+      world = _.cloneDeep(worldM);
+  });
+
+  socket.on('create', function(data){
+      worldM.updateToLogicTime(data.ts);
+      worldM.updateEvent(data);
+      world = _.cloneDeep(worldM);
   });
 
 })();
+
+var createFighter = function() {
+    socket.emit('create', {
+        type:1
+    });
+}
+
+var createArcher = function() {
+    socket.emit('create', {
+        type:2
+    });
+}

@@ -93,16 +93,23 @@ function onListening() {
 // Socket.io
 var io = require('socket.io')(server);
 var numberOfPlayer = 0;
+var startTime;
 io.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
   socket.on('join', function(data) {
     numberOfPlayer ++;
     console.log('Player ' + data.id + ' has joined');
     socket.broadcast.emit('joined', {
-      message: 'Player ' + data.id + ' has joined'
+        message: 'Player ' + data.id + ' has joined'
     });
-    if (numberOfPlayer == 2) {
+    if (numberOfPlayer >= 2) {
         io.sockets.emit('start');
+        startTime = (new Date).getTime();
     }
+  });
+  socket.on('create', function(data){
+      io.sockets.emit('create', {
+          ts: (new Date).getTime() - startTime,
+          type:data.type
+      });
   });
 });
