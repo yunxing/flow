@@ -1,5 +1,5 @@
-function timeToSec(t) {
-    return Math.floor(t / 1000)
+function timeToTicks(t) {
+    return Math.floor(t / (1000 / 60))
 }
 
 function Player() {
